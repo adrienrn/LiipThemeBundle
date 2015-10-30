@@ -51,7 +51,7 @@ class AssetFactory extends BaseAssetFactory
         $matches = array();
         if (preg_match('/%%|%([^%\s]+)%\/(.+)$/', $input, $matches)) {
             //print_r([$matches, array_map(function($v) { return array("function" => $v["function"], "file" => $v["file"]); }, debug_backtrace())]) . "\n";
-            if($matches[1] === "theme_dir") {
+            if ($matches[1] === "theme_dir") {
                 // Resolve path.
                 return $this->resolvePath($matches[2]);
             }
