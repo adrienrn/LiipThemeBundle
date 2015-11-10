@@ -47,7 +47,7 @@ class ThemesInstallCommand extends ContainerAwareCommand
 
         // Retrieve the active theme.
         $activeTheme = $this->getContainer()->get('liip_theme.active_theme');
-        $availableThemes = $this->getContainer()->getParameter("available_themes");
+        $availableThemes = $this->getContainer()->getParameter("liip_theme.themes");
         $filesystem = $this->getContainer()->get('filesystem');
 
         $themesAssetsDir = $targetArg . DIRECTORY_SEPARATOR . "themes";
@@ -71,8 +71,7 @@ class ThemesInstallCommand extends ContainerAwareCommand
             // Search in bundles first.
             $bundle = $themeLocator->locateThemeInBundles($theme);
             if(!empty($bundle)) {
-                $output->writeln(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment>', $theme, $bundle["bundle"]->getName()));
-
+                // Prepare the directory for this bundle.
                 $themesAssetsBundleDir = $themesAssetsDir . DIRECTORY_SEPARATOR . strtolower($bundle["bundle"]->getName());
                 if(!is_dir($themesAssetsBundleDir)) {
                     $filesystem->mkdir($themesAssetsBundleDir, 0777);
@@ -81,6 +80,8 @@ class ThemesInstallCommand extends ContainerAwareCommand
                 // Found theme in bundle.
                 $originDir = $bundle["path"];
                 $targetDir = $themesAssetsBundleDir . DIRECTORY_SEPARATOR . $theme;
+
+                $output->writeln(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $bundle["bundle"]->getName(), $targetDir));
             } else {
                 // Search in app/
                 $path = $themeLocator->locateThemeInApp($theme);
@@ -88,6 +89,8 @@ class ThemesInstallCommand extends ContainerAwareCommand
                     $originDir = $path;
                     $targetDir = $appThemesDir . DIRECTORY_SEPARATOR . $theme;
                 }
+
+                $output->writeln(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $originDir, $targetDir));
             }
 
             if($originDir && $targetDir) {
@@ -100,17 +103,6 @@ class ThemesInstallCommand extends ContainerAwareCommand
                 }
             }
         }
-    }
-
-    /**
-     * Makes a symlink
-     * @param  [type] $originDir [description]
-     * @param  [type] $targetDir [description]
-     * @return [type]            [description]
-     */
-    public function symlink($originDir, $targetDir)
-    {
-
     }
 
     /**
