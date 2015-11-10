@@ -47,6 +47,7 @@
             <argument>%liip_theme.active_theme%</argument>
             <argument>%liip_theme.themes%</argument>
             <argument type="service" id="liip_theme.theme_auto_detect" />
+            <argument type="service" id="liip_theme.theme_locator" />
         </service>
 
     </services>

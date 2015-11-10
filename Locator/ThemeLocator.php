@@ -2,6 +2,7 @@
 
 namespace Liip\ThemeBundle\Locator;
 
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -51,7 +52,7 @@ class ThemeLocator
             '%template%' => ""
         );
 
-        foreach($this->kernel->getBundles() as $bundle) {
+        foreach ($this->kernel->getBundles() as $bundle) {
             $checkPaths = $this->getPathsForBundle(
                 array_merge(
                     $parameters,
@@ -106,6 +107,68 @@ class ThemeLocator
         }
 
         return $files;
+    }
+
+    /**
+     * Search all themes in paths described in liip_theme config
+     *     "Goes on adventures, searching for themes"
+     * @return Array<String> list of found themes.
+     */
+    public function discoverThemes()
+    {
+        $parameters = array(
+            '%app_path%' => $this->appPath,
+            '%dir%' => "",
+            '%override_path%' => "", // ?
+            '%current_theme%' => "",
+            '%current_device%' => "", // ?
+            '%template%' => ""
+        );
+
+        $finder = new Finder();
+        $paths = [];
+        foreach ($this->kernel->getBundles() as $bundle) {
+            $paths = array_merge(
+                $paths,
+                $this->getPathsForBundle(
+                    array_merge(
+                        $parameters,
+                        array(
+                            '%bundle_path%' => $bundle->getPath(),
+                            '%bundle_name%' => $bundle->getName()
+                        )
+                    )
+                )
+            );
+        }
+
+        $parameters = array(
+            '%app_path%' => $this->appPath,
+            '%current_theme%' => "",
+            '%current_device%' => "", // ?
+            '%template%' => "",
+        );
+
+        $paths = array_merge($paths, $this->getPathsForAppResource($parameters));
+
+        $paths = array_map(
+            function($v) {
+                return preg_replace('/(^.*\/themes\/)(.*)$/', "$1", $v);
+            },
+            array_filter(
+                $paths,
+                function($v) {
+                    return file_exists($v) && (preg_match('/^.*\/themes\/.*$/', $v));
+                }
+            )
+        );
+
+        $themes = [];
+        foreach ($finder->directories()->in($paths)->depth('== 0') as $file) {
+            array_push($themes, $file->getFilename());
+        }
+
+        return $themes;
     }
 
     protected function getPathsForBundle($parameters)
