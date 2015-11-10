@@ -23,7 +23,7 @@ class ThemesInstallCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('themes:install')
+            ->setName('assets:themes-install')
             ->setDefinition(array(
                 new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
             ))
