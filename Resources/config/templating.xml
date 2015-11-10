@@ -7,6 +7,7 @@
         <parameter key="liip_theme.templating_locator.class">Liip\ThemeBundle\Locator\TemplateLocator</parameter>
         <parameter key="liip_theme.file_locator.class">Liip\ThemeBundle\Locator\FileLocator</parameter>
         <parameter key="liip_theme.filesystem_loader.class">Liip\ThemeBundle\Twig\Loader\FilesystemLoader</parameter>
+        <parameter key="liip_theme.theme_locator.class">Liip\ThemeBundle\Locator\ThemeLocator</parameter>
         <parameter key="liip_theme.active_theme.class">Liip\ThemeBundle\ActiveTheme</parameter>
         <parameter key="liip_theme.cache_warmer.class">Liip\ThemeBundle\CacheWarmer\TemplatePathsCacheWarmer</parameter>
         <parameter key="liip_theme.theme_auto_detect.class">Liip\ThemeBundle\Helper\DeviceDetection</parameter>
@@ -31,6 +32,12 @@
             <argument type="service" id="liip_theme.active_theme" />
             <argument>%kernel.root_dir%/Resources</argument>
             <argument type="collection" />
+            <argument>%liip_theme.path_patterns%</argument>
+        </service>
+
+        <service id="liip_theme.theme_locator" class="%liip_theme.theme_locator.class%">
+            <argument type="service" id="kernel" />
+            <argument>%kernel.root_dir%</argument>
             <argument>%liip_theme.path_patterns%</argument>
         </service>
 
