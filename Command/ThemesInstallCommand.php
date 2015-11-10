@@ -47,7 +47,8 @@ class ThemesInstallCommand extends ContainerAwareCommand
 
         // Retrieve the active theme.
         $activeTheme = $this->getContainer()->get('liip_theme.active_theme');
-        $availableThemes = $this->getContainer()->getParameter("liip_theme.themes");
+        $availableThemes = $activeTheme->getThemes();
+
         $filesystem = $this->getContainer()->get('filesystem');
 
         $themesAssetsDir = $targetArg . DIRECTORY_SEPARATOR . "themes";
