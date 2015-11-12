@@ -60,10 +60,13 @@ class Installer
      * @param  string  $basePath Path to the target directory, defaults to 'web/themes'
      * @param  boolean $symlink  Whether make a symlink or hard copy
      */
-    public function installAssets($theme, $basePath = 'web/themes', $symlink=true)
+    public function installAssets($theme, $basePath = null, $symlink=true)
     {
-        if(!is_writable($basePath)) {
-            //
+        if(is_null($basePath)) {
+            $basePath = "web" . DIRECTORY_SEPARATOR . "themes";
+        }
+
+        if(file_exists($basePath) && !is_writable($basePath)) {
             throw new \InvalidArgumentException(
                 "'basePath' is not writable"
             );
