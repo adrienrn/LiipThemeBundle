@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Liip/ThemeBundle
+ *
+ * (c) Liip AG
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Liip\ThemeBundle;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -7,6 +16,15 @@ use Symfony\Component\Finder\Finder;
 use Liip\ThemeBundle\Locator\ThemeLocator;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Theme installer service.
+ *
+ * This is a service so we can inject it as reference to different parts of the
+ * application. Can be used from command-line using assets:themes-install or to
+ * install assets after uploading a new theme in the app.
+ *
+ * @author adrienrn
+ */
 class Installer
 {
     /**
