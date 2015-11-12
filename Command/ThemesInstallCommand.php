@@ -45,26 +45,24 @@ class ThemesInstallCommand extends ContainerAwareCommand
             throw new \InvalidArgumentException(sprintf('The target directory "%s" does not exist.', $input->getArgument('target')));
         }
 
+        // Target themes assets directory.
+        $themesAssetsDir = $targetArg . DIRECTORY_SEPARATOR . "themes";
+
         // Retrieve the active theme.
         $activeTheme = $this->getContainer()->get('liip_theme.active_theme');
         $availableThemes = $activeTheme->getThemes();
 
-        $themesAssetsDir = $targetArg . DIRECTORY_SEPARATOR . "themes";
-
-
-        // Do we hard copy or symlink ?
-        $symlink = $input->getOption('symlink');
-        if($symlink) {
-            $output->writeln('Trying to install theme assets as <comment>symbolic links</comment>.');
-        } else {
-            $output->writeln('Installing theme assets as <comment>hard copies</comment>.');
-        }
+        // if($symlink) {
+        //     $output->writeln('Trying to install theme assets as <comment>symbolic links</comment>.');
+        // } else {
+        //     $output->writeln('Installing theme assets as <comment>hard copies</comment>.');
+        // }
 
         foreach($availableThemes as $theme) {
             $output->writeln(sprintf('Installing assets for <comment>%s</comment>', $theme));
 
             // Install assets for this theme.
-            $this->getContainer()->get('liip_theme.installer')->installAssets($theme, $themesAssetsDir);
+            $this->getContainer()->get('liip_theme.installer')->installAssets($theme, $themesAssetsDir, $input->getOption('symlink'));
         }
     }
 }
