@@ -45,6 +45,7 @@
         <service id="liip_theme.installer" class="%liip_theme.installer.class%">
             <argument type="service" id="liip_theme.theme_locator" />
             <argument type="service" id="filesystem" />
+            <argument type="service" id="logger" on-invalid="null" />
         </service>
 
         <service id="liip_theme.theme_auto_detect" class="%liip_theme.theme_auto_detect.class%" />

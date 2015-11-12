@@ -52,17 +52,20 @@ class ThemesInstallCommand extends ContainerAwareCommand
         $activeTheme = $this->getContainer()->get('liip_theme.active_theme');
         $availableThemes = $activeTheme->getThemes();
 
-        // if($symlink) {
-        //     $output->writeln('Trying to install theme assets as <comment>symbolic links</comment>.');
-        // } else {
-        //     $output->writeln('Installing theme assets as <comment>hard copies</comment>.');
-        // }
+        // Logging install mode.
+        if($input->getOption('symlink')) {
+            $output->writeLn(sprintf('Trying to install theme assets as <comment>symbolic links</comment> in <info>%s</info>.', $themesAssetsDir));
+        } else {
+            $output->writeLn(sprintf('Installing theme assets as <comment>hard copies</comment> in <info>%s</info>.', $themesAssetsDir));
+        }
 
+        // Logging list of discovered themes.
+        $output->writeLn(sprintf("Installing following theme(s) assets: <comment>%s</comment>.", join(', ', $availableThemes)));
         foreach($availableThemes as $theme) {
-            $output->writeln(sprintf('Installing assets for <comment>%s</comment>', $theme));
-
             // Install assets for this theme.
             $this->getContainer()->get('liip_theme.installer')->installAssets($theme, $themesAssetsDir, $input->getOption('symlink'));
         }
+
+        $output->writeLn(sprintf("<info>Successfully installed assets for %d theme(s).</info>", count($availableThemes)));
     }
 }

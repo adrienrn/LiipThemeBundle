@@ -5,6 +5,7 @@ namespace Liip\ThemeBundle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Liip\ThemeBundle\Locator\ThemeLocator;
+use Psr\Log\LoggerInterface;
 
 class Installer
 {
@@ -20,10 +21,18 @@ class Installer
      */
     protected $filesystem;
 
-    public function __construct(ThemeLocator $themeLocator, Filesystem $filesystem)
+    /**
+     * Logger.
+     *  Useful since Symfony 2.4 to show output when launching from console.
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(ThemeLocator $themeLocator, Filesystem $filesystem, LoggerInterface $logger = null)
     {
         $this->themeLocator = $themeLocator;
         $this->filesystem = $filesystem;
+        $this->logger = $logger;
     }
 
     /**
@@ -55,7 +64,7 @@ class Installer
 
             $targetDir = $themesAssetsBundleDir . DIRECTORY_SEPARATOR . $theme;
 
-            // $output->writeln(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $bundle["bundle"]->getName(), $targetDir));
+            $this->logger->notice(sprintf('Found theme <comment>%s</comment> in bundle <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $pathInfos["bundle"]->getName(), $targetDir));
         } else {
             // Search in app/
             $path = $this->themeLocator->locateThemeInApp($theme);
@@ -64,7 +73,7 @@ class Installer
                 $targetDir = $appThemesDir . DIRECTORY_SEPARATOR . $theme;
             }
 
-            // $output->writeln(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $originDir, $targetDir));
+            $this->logger->notice(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $originDir, $targetDir));
         }
 
         // Only link / mirror the public folder.
