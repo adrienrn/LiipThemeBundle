@@ -2,8 +2,9 @@
 
 namespace Liip\ThemeBundle;
 
-use Liip\ThemeBundle\Locator\ThemeLocator;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Liip\ThemeBundle\Locator\ThemeLocator;
 
 class Installer
 {
@@ -41,13 +42,13 @@ class Installer
         $this->filesystem->mkdir($basePath, 0777);
 
         // Search in bundles first.
-        $bundle = $this->themeLocator->locateThemeInBundles($theme);
-        if(!empty($bundle)) {
+        $pathInfos = $this->themeLocator->locateThemeInBundles($theme);
+        if(!empty($pathInfos)) {
             // Found theme in bundle.
-            $originDir = $bundle["path"];
+            $originDir = $pathInfos["path"];
 
             // Prepare the directory for this bundle.
-            $themesAssetsBundleDir = $this->getBundleThemesAssetsPath($basePath, $bundle["bundle"]->getName());
+            $themesAssetsBundleDir = $this->getBundleThemesAssetsPath($basePath, $pathInfos["bundle"]->getName());
             if(!is_dir($themesAssetsBundleDir)) {
                 $this->filesystem->mkdir($themesAssetsBundleDir, 0777);
             }
