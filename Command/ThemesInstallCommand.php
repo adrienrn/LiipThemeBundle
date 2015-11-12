@@ -56,10 +56,14 @@ class ThemesInstallCommand extends ContainerAwareCommand
 
         // Target themes assets directory.
         $themesAssetsDir = $targetArg . DIRECTORY_SEPARATOR . "themes";
+        if(file_exists($themesAssetsDir)) {
+            $this->getContainer()->get('filesystem')->remove($themesAssetsDir);
+        }
 
         // Retrieve the active theme.
         $activeTheme = $this->getContainer()->get('liip_theme.active_theme');
         $availableThemes = $activeTheme->getThemes();
+        $installedThemes = [];
 
         // Logging install mode.
         if($input->getOption('symlink')) {
@@ -69,12 +73,15 @@ class ThemesInstallCommand extends ContainerAwareCommand
         }
 
         // Logging list of discovered themes.
-        $output->writeLn(sprintf("Installing following theme(s) assets: <comment>%s</comment>.", join(', ', $availableThemes)));
+        $output->writeLn(sprintf("Found following theme(s) to install: <comment>%s</comment>.", join(', ', $availableThemes)));
         foreach($availableThemes as $theme) {
             // Install assets for this theme.
-            $this->getContainer()->get('liip_theme.installer')->installAssets($theme, $themesAssetsDir, $input->getOption('symlink'));
+            $installed = $this->getContainer()->get('liip_theme.installer')->installAssets($theme, $themesAssetsDir, $input->getOption('symlink'));
+            if($installed === true) {
+                array_push($installedThemes, $theme);
+            }
         }
 
-        $output->writeLn(sprintf("<info>Successfully installed assets for %d theme(s).</info>", count($availableThemes)));
+        $output->writeLn(sprintf("<info>Successfully installed assets for %d theme(s).</info>", count($installedThemes)));
     }
 }

@@ -62,11 +62,17 @@ class Installer
      */
     public function installAssets($theme, $basePath = 'web/themes', $symlink=true)
     {
-        if(file_exists($basePath)) {
-            // Cleanup existing basePath folder, if needed.
-            $this->filesystem->remove($basePath);
+        if(!is_writable($basePath)) {
+            //
+            throw new \InvalidArgumentException(
+                "'basePath' is not writable"
+            );
         }
-        $this->filesystem->mkdir($basePath, 0777);
+
+        if(!file_exists($basePath)) {
+            // Create base target directory if needed.
+            $this->filesystem->mkdir($basePath, 0777);
+        }
 
         // Search in bundles first.
         $pathInfos = $this->themeLocator->locateThemeInBundles($theme);
@@ -88,7 +94,7 @@ class Installer
             $path = $this->themeLocator->locateThemeInApp($theme);
             if($path) {
                 $originDir = $path;
-                $targetDir = $appThemesDir . DIRECTORY_SEPARATOR . $theme;
+                $targetDir = $basePath . DIRECTORY_SEPARATOR . $theme;
             }
 
             $this->logger->notice(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $originDir, $targetDir));
@@ -98,6 +104,11 @@ class Installer
         $originDir = realpath($originDir) . DIRECTORY_SEPARATOR . "public";
 
         if($originDir && $targetDir) {
+            if(!is_dir($originDir)) {
+                $this->logger->warning(sprintf("No assets to install for theme %s. <comment>Skipping.</comment>", $theme));
+                return false;
+            }
+
             if($symlink) {
                 // Symlink.
                 $this->filesystem->symlink($originDir, $targetDir, true);
@@ -105,6 +116,8 @@ class Installer
                 // Hard copy.
                 $this->hardCopy($originDir, $targetDir);
             }
+
+            return true;
         }
     }
 
