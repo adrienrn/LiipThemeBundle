@@ -47,7 +47,7 @@ class Installer
             $originDir = $bundle["path"];
 
             // Prepare the directory for this bundle.
-            $themesAssetsBundleDir = $basePath . DIRECTORY_SEPARATOR . strtolower($bundle["bundle"]->getName());
+            $themesAssetsBundleDir = $this->getBundleThemesAssetsPath($basePath, $bundle["bundle"]->getName());
             if(!is_dir($themesAssetsBundleDir)) {
                 $this->filesystem->mkdir($themesAssetsBundleDir, 0777);
             }
@@ -81,6 +81,19 @@ class Installer
     }
 
     /**
+     * Get the path for assets of themes from bundles.
+     * @param  string $basePath
+     * @param  string $bundleName
+     * @return string
+     */
+    public function getBundleThemesAssetsPath($basePath, $bundleName)
+    {
+        return $basePath . DIRECTORY_SEPARATOR . preg_replace('/bundle$/', "", strtolower($bundleName));
+    }
+
+    /**
+     * Mirrors the content of $originDir in $targetDir
+     *     Inspired by symfony assets:install hardCopy.
      * @param string $originDir
      * @param string $targetDir
      */
