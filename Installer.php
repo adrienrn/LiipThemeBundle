@@ -66,6 +66,9 @@ class Installer
             // $output->writeln(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $originDir, $targetDir));
         }
 
+        // Only link / mirror the public folder.
+        $originDir = realpath($originDir) . DIRECTORY_SEPARATOR . "public";
+
         if($originDir && $targetDir) {
             if($symlink) {
                 // Symlink.
