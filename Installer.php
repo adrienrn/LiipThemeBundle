@@ -62,24 +62,24 @@ class Installer
      */
     public function installAssets($theme, $basePath = null, $symlink=true)
     {
-        if(is_null($basePath)) {
+        if (is_null($basePath)) {
             $basePath = "web" . DIRECTORY_SEPARATOR . "themes";
         }
 
-        if(file_exists($basePath) && !is_writable($basePath)) {
+        if (file_exists($basePath) && !is_writable($basePath)) {
             throw new \InvalidArgumentException(
                 "'basePath' is not writable"
             );
         }
 
-        if(!file_exists($basePath)) {
+        if (!file_exists($basePath)) {
             // Create base target directory if needed.
             $this->filesystem->mkdir($basePath, 0777);
         }
 
         // Search in bundles first.
         $pathInfos = $this->themeLocator->locateThemeInBundles($theme);
-        if(!empty($pathInfos)) {
+        if (!empty($pathInfos)) {
             // Found theme in bundle.
             $originDir = $pathInfos["path"];
 
@@ -106,13 +106,13 @@ class Installer
         // Only link / mirror the public folder.
         $originDir = realpath($originDir) . DIRECTORY_SEPARATOR . "public";
 
-        if($originDir && $targetDir) {
-            if(!is_dir($originDir)) {
+        if ($originDir && $targetDir) {
+            if (!is_dir($originDir)) {
                 $this->logger->warning(sprintf("No assets to install for theme %s. <comment>Skipping.</comment>", $theme));
                 return false;
             }
 
-            if($symlink) {
+            if ($symlink) {
                 // Symlink.
                 $this->filesystem->symlink($originDir, $targetDir, true);
             } else {
