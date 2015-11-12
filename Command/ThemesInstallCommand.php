@@ -38,6 +38,22 @@ class ThemesInstallCommand extends ContainerAwareCommand
             ))
             ->addOption('symlink', null, InputOption::VALUE_NONE, 'Symlinks the assets instead of copying it')
             ->setDescription('Installs themes assets into the web directory')
+            ->setHelp(<<<EOT
+The <info>%command.name%</info> command installs themes assets into a given
+directory (e.g. the <comment>web</comment> directory).
+
+  <info>php %command.full_name% web</info>
+
+A "themes" directory will be created inside the target directory and the
+"themes/<options=bold>%theme_name%</>/public" directory of each theme will be copied into it.
+
+To create a symlink to each bundle instead of copying its assets, use the
+<info>--symlink</info> option (will fall back to hard copies when symbolic links aren't possible:
+
+  <info>php %command.full_name% web --symlink</info>
+
+EOT
+            )
         ;
     }
 
