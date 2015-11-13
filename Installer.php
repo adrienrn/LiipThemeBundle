@@ -98,15 +98,15 @@ class Installer
             if($path) {
                 $originDir = $path;
                 $targetDir = $basePath . DIRECTORY_SEPARATOR . $theme;
-            }
 
-            $this->logger->notice(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $originDir, $targetDir));
+                $this->logger->notice(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $originDir, $targetDir));
+            }
         }
 
-        // Only link / mirror the public folder.
-        $originDir = realpath($originDir) . DIRECTORY_SEPARATOR . "public";
+        if (isset($originDir) && isset($targetDir)) {
+            // Only link / mirror the public folder.
+            $originDir = realpath($originDir) . DIRECTORY_SEPARATOR . "public";
 
-        if ($originDir && $targetDir) {
             if (!is_dir($originDir)) {
                 $this->logger->warning(sprintf("No assets to install for theme %s. <comment>Skipping.</comment>", $theme));
                 return false;
@@ -121,6 +121,8 @@ class Installer
             }
 
             return true;
+        } else {
+            $this->logger->warning(sprintf('Theme <comment>%s</comment> not found. <comment>Skipping.</comment>', $theme));
         }
     }
 
