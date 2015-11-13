@@ -29,12 +29,14 @@ class Installer
 {
     /**
      * Locator service for themes.
+     *
      * @var \Liip\ThemeBundle\Locator\ThemeLocator
      */
     protected $themeLocator;
 
     /**
      * Symfony filesystem service.
+     *
      * @var \Symfony\Component\Filesystem\Filesystem
      */
     protected $filesystem;
@@ -42,6 +44,7 @@ class Installer
     /**
      * Logger.
      *  Useful since Symfony 2.4 to show output when launching from console.
+     *
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
@@ -54,16 +57,16 @@ class Installer
     }
 
     /**
-     * Install assets for given $theme in $basePath
+     * Install assets for given $theme in $basePath.
      *
-     * @param  string  $theme    [description]
-     * @param  string  $basePath Path to the target directory, defaults to 'web/themes'
-     * @param  boolean $symlink  Whether make a symlink or hard copy
+     * @param  string $theme    Name of the theme
+     * @param  string $basePath Path to the target directory, defaults to 'web/themes'
+     * @param  bool   $symlink  Whether make a symlink or hard copy
      */
-    public function installAssets($theme, $basePath = null, $symlink=true)
+    public function installAssets($theme, $basePath = null, $symlink = true)
     {
         if (is_null($basePath)) {
-            $basePath = "web" . DIRECTORY_SEPARATOR . "themes";
+            $basePath = 'web'.DIRECTORY_SEPARATOR.'themes';
         }
 
         if (file_exists($basePath) && !is_writable($basePath)) {
@@ -84,12 +87,12 @@ class Installer
             $originDir = $pathInfos["path"];
 
             // Prepare the directory for this bundle.
-            $themesAssetsBundleDir = $this->getBundleThemesAssetsPath($basePath, $pathInfos["bundle"]->getName());
-            if(!is_dir($themesAssetsBundleDir)) {
+            $themesAssetsBundleDir = $this->getBundleThemesAssetsPath($basePath, $pathInfos['bundle']->getName());
+            if (!is_dir($themesAssetsBundleDir)) {
                 $this->filesystem->mkdir($themesAssetsBundleDir, 0777);
             }
 
-            $targetDir = $themesAssetsBundleDir . DIRECTORY_SEPARATOR . $theme;
+            $targetDir = $themesAssetsBundleDir.DIRECTORY_SEPARATOR.$theme;
 
             $this->logger->notice(sprintf('Found theme <comment>%s</comment> in bundle <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $pathInfos["bundle"]->getName(), $targetDir));
         } else {
@@ -105,10 +108,10 @@ class Installer
 
         if (isset($originDir) && isset($targetDir)) {
             // Only link / mirror the public folder.
-            $originDir = realpath($originDir) . DIRECTORY_SEPARATOR . "public";
+            $originDir = realpath($originDir).DIRECTORY_SEPARATOR.'public';
 
             if (!is_dir($originDir)) {
-                $this->logger->warning(sprintf("No assets to install for theme %s. <comment>Skipping.</comment>", $theme));
+                $this->logger->warning(sprintf('No assets to install for theme %s. <comment>Skipping.</comment>', $theme));
                 return false;
             }
 
@@ -128,18 +131,21 @@ class Installer
 
     /**
      * Get the path for assets of themes from bundles.
+     *
      * @param  string $basePath
      * @param  string $bundleName
+     *
      * @return string
      */
     public function getBundleThemesAssetsPath($basePath, $bundleName)
     {
-        return $basePath . DIRECTORY_SEPARATOR . preg_replace('/bundle$/', "", strtolower($bundleName));
+        return $basePath.DIRECTORY_SEPARATOR.preg_replace('/bundle$/', '', strtolower($bundleName));
     }
 
     /**
      * Mirrors the content of $originDir in $targetDir
      *     Inspired by symfony assets:install hardCopy.
+     *
      * @param string $originDir
      * @param string $targetDir
      */

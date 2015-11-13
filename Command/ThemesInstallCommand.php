@@ -16,11 +16,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Finder\Finder;
 
 /**
- * Command that installs themes assets into the web/ folder
+ * Command that installs themes assets into the web/ folder.
  *
  * @author adrienrn
  */
@@ -71,7 +69,7 @@ EOT
         }
 
         // Target themes assets directory.
-        $themesAssetsDir = $targetArg . DIRECTORY_SEPARATOR . "themes";
+        $themesAssetsDir = $targetArg.DIRECTORY_SEPARATOR.'themes';
         if (file_exists($themesAssetsDir)) {
             $this->getContainer()->get('filesystem')->remove($themesAssetsDir);
         }
@@ -79,7 +77,7 @@ EOT
         // Retrieve the active theme.
         $activeTheme = $this->getContainer()->get('liip_theme.active_theme');
         $availableThemes = $activeTheme->getThemes();
-        $installedThemes = [];
+        $installedThemes = array();
 
         // Logging install mode.
         if ($input->getOption('symlink')) {
@@ -89,7 +87,7 @@ EOT
         }
 
         // Logging list of discovered themes.
-        $output->writeLn(sprintf("Found following theme(s) to install: <comment>%s</comment>.", join(', ', $availableThemes)));
+        $output->writeLn(sprintf('Found following theme(s) to install: <comment>%s</comment>.', join(', ', $availableThemes)));
         foreach ($availableThemes as $theme) {
             // Install assets for this theme.
             $installed = $this->getContainer()->get('liip_theme.installer')->installAssets($theme, $themesAssetsDir, $input->getOption('symlink'));
@@ -98,6 +96,6 @@ EOT
             }
         }
 
-        $output->writeLn(sprintf("<info>Successfully installed assets for %d theme(s).</info>", count($installedThemes)));
+        $output->writeLn(sprintf('<info>Successfully installed assets for %d theme(s).</info>', count($installedThemes)));
     }
 }

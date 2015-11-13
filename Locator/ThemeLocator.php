@@ -29,7 +29,7 @@ class ThemeLocator
     protected $kernel;
     protected $pathPatterns;
 
-    function __construct(KernelInterface $kernel, $appPath = null, array $pathPatterns = array())
+    public function __construct(KernelInterface $kernel, $appPath = null, array $pathPatterns = array())
     {
         $this->kernel = $kernel;
         $this->appPath = $appPath;
@@ -63,8 +63,8 @@ class ThemeLocator
             '%dir%' => $dir,
             '%override_path%' => $theme, // ?
             '%current_theme%' => $theme,
-            '%current_device%' => "", // ?
-            '%template%' => ""
+            '%current_device%' => '', // ?
+            '%template%' => '',
         );
 
         foreach ($this->kernel->getBundles() as $bundle) {
@@ -73,23 +73,23 @@ class ThemeLocator
                     $parameters,
                     array(
                         '%bundle_path%' => $bundle->getPath(),
-                        '%bundle_name%' => $bundle->getName()
+                        '%bundle_name%' => $bundle->getName(),
                     )
                 )
             );
 
-            $found = [];
+            $found = array();
             foreach ($checkPaths as $checkPath) {
                 if (file_exists($checkPath)) {
                     if ($first) {
                         return array(
-                            "path" => $checkPath,
-                            "bundle" => $bundle
+                            'path' => $checkPath,
+                            'bundle' => $bundle
                         );
                     }
                     $found[] = array(
-                        "path" => $checkPath,
-                        "bundle" => $bundle
+                        'path' => $checkPath,
+                        'bundle' => $bundle
                     );
                 }
             }
@@ -108,8 +108,8 @@ class ThemeLocator
         $parameters = array(
             '%app_path%' => $this->appPath,
             '%current_theme%' => $theme,
-            '%current_device%' => "", // ?
-            '%template%' => "",
+            '%current_device%' => '', // ?
+            '%template%' => '',
         );
 
         foreach ($this->getPathsForAppResource($parameters) as $checkPath) {
@@ -133,11 +133,11 @@ class ThemeLocator
     {
         $parameters = array(
             '%app_path%' => $this->appPath,
-            '%dir%' => "",
-            '%override_path%' => "", // ?
-            '%current_theme%' => "",
-            '%current_device%' => "", // ?
-            '%template%' => ""
+            '%dir%' => '',
+            '%override_path%' => '', // ?
+            '%current_theme%' => '',
+            '%current_device%' => '', // ?
+            '%template%' => '',
         );
 
         $finder = new Finder();
@@ -150,7 +150,7 @@ class ThemeLocator
                         $parameters,
                         array(
                             '%bundle_path%' => $bundle->getPath(),
-                            '%bundle_name%' => $bundle->getName()
+                            '%bundle_name%' => $bundle->getName(),
                         )
                     )
                 )
@@ -159,26 +159,26 @@ class ThemeLocator
 
         $parameters = array(
             '%app_path%' => $this->appPath,
-            '%current_theme%' => "",
-            '%current_device%' => "", // ?
-            '%template%' => "",
+            '%current_theme%' => '',
+            '%current_device%' => '', // ?
+            '%template%' => '',
         );
 
         $paths = array_merge($paths, $this->getPathsForAppResource($parameters));
 
         $paths = array_map(
-            function($v) {
-                return preg_replace('/(^.*\/themes\/)(.*)$/', "$1", $v);
+            function ($v) {
+                return preg_replace('/(^.*\/themes\/)(.*)$/', '$1', $v);
             },
             array_filter(
                 $paths,
-                function($v) {
+                function ($v) {
                     return file_exists($v) && (preg_match('/^.*\/themes\/.*$/', $v));
                 }
             )
         );
 
-        $themes = [];
+        $themes = array();
         foreach ($finder->directories()->in($paths)->depth('== 0') as $file) {
             array_push($themes, $file->getFilename());
         }
