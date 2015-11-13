@@ -45,8 +45,9 @@ class ActiveTheme
      */
     public function __construct($name, array $themes = array(), DeviceDetectionInterface $deviceDetection = null, ThemeLocator $themeLocator)
     {
-        $themes = $themeLocator->discoverThemes();
-
+        if (empty($themes)) {
+            $themes = $themeLocator->discoverThemes();
+        }
         $this->setThemes($themes);
 
         if ($name) {
