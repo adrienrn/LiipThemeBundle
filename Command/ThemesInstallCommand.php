@@ -87,7 +87,7 @@ EOT
         }
 
         // Logging list of discovered themes.
-        $output->writeLn(sprintf('Found following theme(s) to install: <comment>%s</comment>.', join(', ', $availableThemes)));
+        $output->writeLn(sprintf('Found following theme(s) to install: <comment>%s</comment>.', implode(', ', $availableThemes)));
         foreach ($availableThemes as $theme) {
             // Install assets for this theme.
             $installed = $this->getContainer()->get('liip_theme.installer')->installAssets($theme, $themesAssetsDir, $input->getOption('symlink'));

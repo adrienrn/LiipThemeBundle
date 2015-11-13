@@ -127,6 +127,7 @@ class ThemeLocator
     /**
      * Search all themes in paths described in liip_theme config.
      *     "Goes on adventures, searching for themes".
+     *
      * @return Array<String> list of found themes.
      */
     public function discoverThemes()

@@ -112,6 +112,7 @@ class Installer
 
             if (!is_dir($originDir)) {
                 $this->logger->warning(sprintf('No assets to install for theme %s. <comment>Skipping.</comment>', $theme));
+
                 return false;
             }
 
