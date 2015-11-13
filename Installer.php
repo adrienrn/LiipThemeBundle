@@ -59,9 +59,9 @@ class Installer
     /**
      * Install assets for given $theme in $basePath.
      *
-     * @param  string $theme    Name of the theme
-     * @param  string $basePath Path to the target directory, defaults to 'web/themes'
-     * @param  bool   $symlink  Whether make a symlink or hard copy
+     * @param string $theme    Name of the theme
+     * @param string $basePath Path to the target directory, defaults to 'web/themes'
+     * @param bool   $symlink  Whether make a symlink or hard copy
      */
     public function installAssets($theme, $basePath = null, $symlink = true)
     {
@@ -84,7 +84,7 @@ class Installer
         $pathInfos = $this->themeLocator->locateThemeInBundles($theme);
         if (!empty($pathInfos)) {
             // Found theme in bundle.
-            $originDir = $pathInfos["path"];
+            $originDir = $pathInfos['path'];
 
             // Prepare the directory for this bundle.
             $themesAssetsBundleDir = $this->getBundleThemesAssetsPath($basePath, $pathInfos['bundle']->getName());
@@ -94,15 +94,15 @@ class Installer
 
             $targetDir = $themesAssetsBundleDir.DIRECTORY_SEPARATOR.$theme;
 
-            $this->logger->notice(sprintf('Found theme <comment>%s</comment> in bundle <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $pathInfos["bundle"]->getName(), $targetDir));
+            $this->logger->notice(sprintf('Found theme <comment>%s</comment> in bundle <comment>%s</comment> installing in <comment>%s</comment>', $theme, $pathInfos['bundle']->getName(), $targetDir));
         } else {
             // Search in app/
             $path = $this->themeLocator->locateThemeInApp($theme);
-            if($path) {
+            if ($path) {
                 $originDir = $path;
-                $targetDir = $basePath . DIRECTORY_SEPARATOR . $theme;
+                $targetDir = $basePath.DIRECTORY_SEPARATOR.$theme;
 
-                $this->logger->notice(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment> ', $theme, $originDir, $targetDir));
+                $this->logger->notice(sprintf('Found theme <comment>%s</comment> in <comment>%s</comment> installing in <comment>%s</comment>', $theme, $originDir, $targetDir));
             }
         }
 
@@ -132,8 +132,8 @@ class Installer
     /**
      * Get the path for assets of themes from bundles.
      *
-     * @param  string $basePath
-     * @param  string $bundleName
+     * @param string $basePath
+     * @param string $bundleName
      *
      * @return string
      */
