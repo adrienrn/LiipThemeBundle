@@ -125,9 +125,9 @@ class Installer
             }
 
             return true;
-        } else {
-            $this->logger->warning(sprintf('Theme <comment>%s</comment> not found. <comment>Skipping.</comment>', $theme));
         }
+
+        $this->logger->warning(sprintf('Theme <comment>%s</comment> not found. <comment>Skipping.</comment>', $theme));
     }
 
     /**

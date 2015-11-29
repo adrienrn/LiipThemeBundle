@@ -142,7 +142,7 @@ class ThemeLocator
         );
 
         $finder = new Finder();
-        $paths = [];
+        $paths = array();
         foreach ($this->kernel->getBundles() as $bundle) {
             $paths = array_merge(
                 $paths,

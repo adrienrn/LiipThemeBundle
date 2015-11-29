@@ -63,7 +63,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Target directory.
-        $targetArg = rtrim($input->getArgument('target'), '/');
+        $targetArg = rtrim($input->getArgument('target'), DIRECTORY_SEPARATOR);
         if (!is_dir($targetArg)) {
             throw new \InvalidArgumentException(sprintf('The target directory "%s" does not exist.', $input->getArgument('target')));
         }

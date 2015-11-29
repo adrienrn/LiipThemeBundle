@@ -43,9 +43,10 @@ class ActiveTheme
      * @param array                           $themes
      * @param Helper\DeviceDetectionInterface $deviceDetection
      */
-    public function __construct($name, array $themes = array(), DeviceDetectionInterface $deviceDetection = null, ThemeLocator $themeLocator)
+    public function __construct($name, array $themes = array(), DeviceDetectionInterface $deviceDetection = null, ThemeLocator $themeLocator = null)
     {
-        if (empty($themes)) {
+        if (empty($themes) && !is_null($themeLocator)) {
+            // If no available themes are set in the config and a themeLocator exists
             $themes = $themeLocator->discoverThemes();
         }
         $this->setThemes($themes);
