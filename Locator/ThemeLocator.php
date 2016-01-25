@@ -134,7 +134,7 @@ class ThemeLocator
     {
         $parameters = array(
             '%app_path%' => $this->appPath,
-            '%dir%' => '',
+            '%dir%' => $this->appPath,
             '%override_path%' => '', // ?
             '%current_theme%' => '',
             '%current_device%' => '', // ?
@@ -180,7 +180,8 @@ class ThemeLocator
         );
 
         $themes = array();
-        foreach ($finder->directories()->in($paths)->depth('== 0') as $file) {
+        $foundPaths = array_unique(iterator_to_array($finder->directories()->in($paths)->depth('== 0')));
+        foreach ($foundPaths as $file) {
             array_push($themes, $file->getFilename());
         }
 
