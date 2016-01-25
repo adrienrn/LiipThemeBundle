@@ -81,7 +81,7 @@ class Installer
         }
 
         // Search in bundles first.
-        $pathInfos = $this->themeLocator->locateThemeInBundles($theme);
+        $pathInfos = $this->themeLocator->locateThemeInBundles($theme, 'X' /* @TODO */);
         if (!empty($pathInfos)) {
             // Found theme in bundle.
             $originDir = $pathInfos['path'];
