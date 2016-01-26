@@ -179,6 +179,11 @@ class ThemeLocator
             )
         );
 
+        if (empty($paths)) {
+
+            return array();
+        }
+
         $themes = array();
         $foundPaths = array_unique(iterator_to_array($finder->directories()->in($paths)->depth('== 0')));
         foreach ($foundPaths as $file) {

@@ -77,25 +77,32 @@ EOT
         // Retrieve the active theme.
         $activeTheme = $this->getContainer()->get('liip_theme.active_theme');
         $availableThemes = $activeTheme->getThemes();
-        $installedThemes = array();
 
-        // Logging install mode.
-        if ($input->getOption('symlink')) {
-            $output->writeLn(sprintf('Trying to install theme assets as <comment>symbolic links</comment> in <info>%s</info>.', $themesAssetsDir));
-        } else {
-            $output->writeLn(sprintf('Installing theme assets as <comment>hard copies</comment> in <info>%s</info>.', $themesAssetsDir));
-        }
 
-        // Logging list of discovered themes.
-        $output->writeLn(sprintf('Found following theme(s) to install: <comment>%s</comment>.', implode(', ', $availableThemes)));
-        foreach ($availableThemes as $theme) {
-            // Install assets for this theme.
-            $installed = $this->getContainer()->get('liip_theme.installer')->installAssets($theme, $themesAssetsDir, $input->getOption('symlink'));
-            if ($installed === true) {
-                array_push($installedThemes, $theme);
+        if (!empty($availableThemes)) {
+            $installedThemes = array();
+
+            // Logging install mode.
+            if ($input->getOption('symlink')) {
+                $output->writeLn(sprintf('Trying to install theme assets as <comment>symbolic links</comment> in <info>%s</info>.', $themesAssetsDir));
+            } else {
+                $output->writeLn(sprintf('Installing theme assets as <comment>hard copies</comment> in <info>%s</info>.', $themesAssetsDir));
             }
-        }
 
-        $output->writeLn(sprintf('<info>Successfully installed assets for %d theme(s).</info>', count($installedThemes)));
+            // Logging list of discovered themes.
+            $output->writeLn(sprintf('Found following theme(s) to install: <comment>%s</comment>.', implode(', ', $availableThemes)));
+            foreach ($availableThemes as $theme) {
+                // Install assets for this theme.
+                $installed = $this->getContainer()->get('liip_theme.installer')->installAssets($theme, $themesAssetsDir, $input->getOption('symlink'));
+                if ($installed === true) {
+                    array_push($installedThemes, $theme);
+                }
+            }
+
+            $output->writeLn(sprintf('<info>Successfully installed assets for %d theme(s).</info>', count($installedThemes)));
+        } else {
+
+            $output->writeLn('<comment>No themes to install.</comment>');
+        }
     }
 }
