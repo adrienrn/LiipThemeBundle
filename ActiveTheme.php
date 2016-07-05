@@ -82,6 +82,11 @@ class ActiveTheme
 
     public function setName($name)
     {
+        if (null === $name) {
+            $this->name = null;
+            return;
+        }
+
         if (!in_array($name, $this->themes)) {
             throw new \InvalidArgumentException(sprintf(
                 'The active theme "%s" must be in the themes list (%s)',
