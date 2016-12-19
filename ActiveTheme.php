@@ -12,6 +12,7 @@
 namespace Liip\ThemeBundle;
 
 use Liip\ThemeBundle\Helper\DeviceDetectionInterface;
+use Liip\ThemeBundle\Locator\ThemeLocator;
 
 /**
  * Contains the currently active theme and allows to change it.
@@ -42,8 +43,12 @@ class ActiveTheme
      * @param array                           $themes
      * @param Helper\DeviceDetectionInterface $deviceDetection
      */
-    public function __construct($name, array $themes = array(), DeviceDetectionInterface $deviceDetection = null)
+    public function __construct($name, array $themes = array(), DeviceDetectionInterface $deviceDetection = null, ThemeLocator $themeLocator = null)
     {
+        if (empty($themes) && !is_null($themeLocator)) {
+            // If no available themes are set in the config and a themeLocator exists
+            $themes = $themeLocator->discoverThemes();
+        }
         $this->setThemes($themes);
 
         if ($name) {
@@ -77,6 +82,11 @@ class ActiveTheme
 
     public function setName($name)
     {
+        if (null === $name) {
+            $this->name = null;
+            return;
+        }
+
         if (!in_array($name, $this->themes)) {
             throw new \InvalidArgumentException(sprintf(
                 'The active theme "%s" must be in the themes list (%s)',

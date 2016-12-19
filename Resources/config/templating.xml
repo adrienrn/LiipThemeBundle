@@ -7,6 +7,8 @@
         <parameter key="liip_theme.templating_locator.class">Liip\ThemeBundle\Locator\TemplateLocator</parameter>
         <parameter key="liip_theme.file_locator.class">Liip\ThemeBundle\Locator\FileLocator</parameter>
         <parameter key="liip_theme.filesystem_loader.class">Liip\ThemeBundle\Twig\Loader\FilesystemLoader</parameter>
+        <parameter key="liip_theme.theme_locator.class">Liip\ThemeBundle\Locator\ThemeLocator</parameter>
+        <parameter key="liip_theme.installer.class">Liip\ThemeBundle\Installer</parameter>
         <parameter key="liip_theme.active_theme.class">Liip\ThemeBundle\ActiveTheme</parameter>
         <parameter key="liip_theme.cache_warmer.class">Liip\ThemeBundle\CacheWarmer\TemplatePathsCacheWarmer</parameter>
         <parameter key="liip_theme.theme_auto_detect.class">Liip\ThemeBundle\Helper\DeviceDetection</parameter>
@@ -34,12 +36,25 @@
             <argument>%liip_theme.path_patterns%</argument>
         </service>
 
+        <service id="liip_theme.theme_locator" class="%liip_theme.theme_locator.class%">
+            <argument type="service" id="kernel" />
+            <argument>%kernel.root_dir%</argument>
+            <argument>%liip_theme.path_patterns%</argument>
+        </service>
+
+        <service id="liip_theme.installer" class="%liip_theme.installer.class%">
+            <argument type="service" id="liip_theme.theme_locator" />
+            <argument type="service" id="filesystem" />
+            <argument type="service" id="logger" on-invalid="null" />
+        </service>
+
         <service id="liip_theme.theme_auto_detect" class="%liip_theme.theme_auto_detect.class%" />
 
         <service id="liip_theme.active_theme" class="%liip_theme.active_theme.class%">
             <argument>%liip_theme.active_theme%</argument>
             <argument>%liip_theme.themes%</argument>
             <argument type="service" id="liip_theme.theme_auto_detect" />
+            <argument type="service" id="liip_theme.theme_locator" />
         </service>
 
     </services>
